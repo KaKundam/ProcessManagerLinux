@@ -44,12 +44,15 @@ def kill_process(pid=None, name=None):
             process.terminate()
             print(f"Process với PID {pid} đã bị kết thúc.")
         elif name:
+            CountKill=0
             for proc in psutil.process_iter(['name']):
-                if proc.info['name'] == name:
+                if proc.info['name'].lower() == name:
                     proc.terminate()
-                    print(f"Process {name} đã bị kết thúc.")
-                    return
-            print(f"Không tìm thấy process có tên {name}.")
+                    CountKill+=1
+            if CountKill>0:
+                print(f"{CountKill} Process {name} đã bị kết thúc.")
+            else:
+                print(f"Không tìm thấy process có tên {name}.")
     except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
         print(f"Lỗi: {e}")
 
