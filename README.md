@@ -8,8 +8,10 @@ Lưu ý trong máy cần có thư viện psutil và tabulate
 
 Chưa có thì có thể cài bằng các câu lệnh sau
 
+```bash
 pip install psutil
 pip install tabulate
+```
 
 Các câu lệnh sẵn có trong ứng dụng
 
