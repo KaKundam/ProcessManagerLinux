@@ -4,6 +4,8 @@
 --- Process Manager CLI ---
 
 Cài về và chạy file ProcessManager.py bằng python
+
+
 Lưu ý trong máy cần có thư viện `psutil` và `tabulate`
 
 Chưa có thì có thể cài bằng các câu lệnh sau
