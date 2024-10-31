@@ -84,7 +84,7 @@ def main():
                     kill_process(name=name)
             except ValueError:
                 print("Lỗi: PID phải là một số nguyên .")
-            time.sleep(3)
+            time.sleep(2)
         elif command.startswith("sort"):
             global sort_by
             sort_by = command.split(" ")[1]
