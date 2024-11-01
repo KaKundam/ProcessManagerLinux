@@ -31,7 +31,7 @@ def get_process_info():
 
     # Sắp xếp danh sách process theo thuộc tính được chọn
     if sort_by:
-        idx = {"PID": 0, "USER": 1, "PRIORITY": 2, "RES": 3, "%CPU": 5, "%MEM": 6, "COMMAND": 7}.get(sort_by.upper(), 0)
+        idx = {"PID": 0, "USER": 1, "PR": 2, "RES": 3, "%CPU": 5, "%MEM": 6, "COMMAND": 7}.get(sort_by.upper(), 0)
         processes.sort(key=lambda x: x[idx], reverse=(sort_by.upper() in ["%CPU", "%MEM"]))
     return processes
 
@@ -135,7 +135,7 @@ def main():
         print("1. Nhấn Enter để làm mới danh sách.")
         print("2. Nhập 'kill pid=<PID>' để kết thúc một process bằng PID.")
         print("3. Nhập 'kill name=<command>' để kết thúc một process bằng tên lệnh.")
-        print("4. Nhập 'sort <thuộc tính>' để sắp xếp, bao gồm: PID, USER, PRIORITY, RES, %CPU, %MEM, COMMAND.")
+        print("4. Nhập 'sort <thuộc tính>' để sắp xếp, bao gồm: PID, USER, PR, RES, %CPU, %MEM, COMMAND.")
         print("5. Nhập 'priority pid=<PID> value=<new_priority>' để thay đổi độ ưu tiên.")
         print("6. Nhập 'details pid=<PID>' để xem chi tiết của một process.")
         print("7. Nhập 'exit' để thoát chương trình.")
