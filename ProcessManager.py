@@ -22,7 +22,10 @@ def get_process_info():
             # Thêm vào danh sách
             processes.append([pid, user, priority, memory, status, cpu_usage, memory_usage, command])
 
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+        except (psutil.NoSuchProcess, psutil.ZombieProcess):
+            pass
+        except psutil.AccessDenied:
+            print(f"Lỗi: Không đủ quyền truy cập để lấy thông tin tiến trình PID {proc.pid}.")
             pass
 
     # Sắp xếp danh sách process theo thuộc tính được chọn
@@ -38,6 +41,7 @@ def display_processes(processes):
     print(table)
 
 def kill_process(pid=None, name=None):
+    """Kết thúc một tiến trình dựa trên PID hoặc tên lệnh."""
     try:
         if pid:
             process = psutil.Process(pid)
@@ -52,51 +56,65 @@ def kill_process(pid=None, name=None):
                     print(f"Process {name} đã bị kết thúc.")
                     return
             print(f"Không tìm thấy process có tên {name}.")
-    except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
-        print(f"Lỗi: {e}")
+    except psutil.AccessDenied:
+        print("Lỗi: Không đủ quyền truy cập để kết thúc tiến trình này.")
+    except psutil.NoSuchProcess:
+        print("Lỗi: Không tìm thấy tiến trình.")
+    except Exception as e:
+        print(f"Lỗi khác: {e}")
 
 def change_priority(command):
+    """Thay đổi độ ưu tiên của một tiến trình."""
     try:
-        # Tách và lấy PID và new_priority từ lệnh
         parts = command.split()
         pid_part = next(part for part in parts if part.startswith("pid="))
         value_part = next(part for part in parts if part.startswith("value="))
-
-        # Trích xuất giá trị PID và new_priority
         pid = int(pid_part.split("=")[1])
         new_priority = int(value_part.split("=")[1])
 
-        # Thay đổi độ ưu tiên của tiến trình
         process = psutil.Process(pid)
         process.nice(new_priority)
         log_action(f"Changed priority of PID {pid} to {new_priority}.")
         print(f"Độ ưu tiên của PID {pid} đã được thay đổi thành {new_priority}.")
+        input("Press Enter to observe the result")
 
+    except psutil.AccessDenied:
+        print("Lỗi: Không đủ quyền truy cập để thay đổi độ ưu tiên của tiến trình này.")
+        input("Press Enter to escape")
+    except psutil.NoSuchProcess:
+        print("Lỗi: Không tìm thấy tiến trình.")
+        input("Press Enter to escape")
     except StopIteration:
         print("Lỗi: Vui lòng nhập đúng định dạng 'priority pid=<PID> value=<new_priority>'.")
-    except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
-        print(f"Lỗi: {e}")
+        input("Press Enter to escape")
     except ValueError:
         print("Lỗi: PID và giá trị ưu tiên phải là số nguyên.")
+        input("Press Enter to escape")
+    except Exception as e:
+        print(f"Lỗi khác: {e}")
+        input("Press Enter to escape")
 
 def view_process_details(pid):
+    """Hiển thị chi tiết của một tiến trình."""
     try:
         process = psutil.Process(pid)
         details = process.as_dict(attrs=['pid', 'name', 'username', 'status', 'cpu_percent', 'memory_info', 'create_time', 'cmdline'])
         
-        # Collect all details into a single string
         detail_output = "\nChi tiết tiến trình:\n"
         for key, value in details.items():
             detail_output += f"{key.capitalize()}: {value}\n"
         
-        # Print all details at once
         print(detail_output)
-        
-        # Pause to allow the user to view the details
         input("Nhấn Enter để quay lại.")
     
-    except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
-        print(f"Lỗi: {e}")
+    except psutil.AccessDenied:
+        print("Lỗi: Không đủ quyền truy cập để xem chi tiết của tiến trình này.")
+        input("Nhấn Enter để quay lại.")
+    except psutil.NoSuchProcess:
+        print("Lỗi: Không tìm thấy tiến trình.")
+        input("Nhấn Enter để quay lại.")
+    except Exception as e:
+        print(f"Lỗi khác: {e}")
         input("Nhấn Enter để quay lại.")
 
 def log_action(action):
@@ -109,7 +127,6 @@ def main():
         processes = get_process_info()
         display_processes(processes)
 
-        # Nhận lệnh từ người dùng
         print("\n--- Process Manager CLI ---")
         print("Các lệnh có sẵn:")
         print("1. Nhấn Enter để làm mới danh sách.")
@@ -151,4 +168,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
