@@ -53,7 +53,7 @@ def kill_process(pid=None, name=None):
                 print(f"{CountKill} Process {name} đã bị kết thúc.")
             else:
                 print(f"Không tìm thấy process có tên {name}.")
-    except (psutil.NoSuchProcess, psutil.AccessDenied) as e:
+    except (psutil.AccessDenied, psutil.NoSuchProcess) as e:
         print(f"Lỗi: {e}")
 
 def main():
