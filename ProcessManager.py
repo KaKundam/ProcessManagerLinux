@@ -1,4 +1,5 @@
 import os
+import time
 import psutil
 from tabulate import tabulate
 import datetime
@@ -49,13 +50,15 @@ def kill_process(pid=None, name=None):
             log_action(f"Killed process with PID {pid}.")
             print(f"Process với PID {pid} đã bị kết thúc.")
         elif name:
+            CountKill=0
             for proc in psutil.process_iter(['name']):
-                if proc.info['name'] == name:
+                if proc.info['name'].lower() == name:
                     proc.terminate()
-                    log_action(f"Killed process with name {name}.")
-                    print(f"Process {name} đã bị kết thúc.")
-                    return
-            print(f"Không tìm thấy process có tên {name}.")
+                    CountKill+=1
+            if CountKill>0:
+                print(f"{CountKill} Process {name} đã bị kết thúc.")
+            else:
+                print(f"Không tìm thấy process có tên {name}.")
     except psutil.AccessDenied:
         print("Lỗi: Không đủ quyền truy cập để kết thúc tiến trình này.")
     except psutil.NoSuchProcess:
@@ -152,7 +155,8 @@ def main():
                     name = command.split("name=")[1]
                     kill_process(name=name)
             except ValueError:
-                print("Lỗi: PID phải là một số nguyên.")
+                print("Lỗi: PID phải là một số nguyên .")
+            time.sleep(3)
         elif command.startswith("sort"):
             sort_by = command.split(" ")[1]
         elif command.startswith("priority"):
