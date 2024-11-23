@@ -26,5 +26,5 @@ Các câu lệnh sẵn có trong ứng dụng
 5. Nhập `exit` để thoát chương trình.
 
 
-
+Report of our project: [Report]{https://www.overleaf.com/read/rxbyrvrpbjzj#3b05d3}
 Created by KaKundam and LHH
