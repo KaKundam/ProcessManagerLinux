@@ -132,8 +132,8 @@ def main():
         print("3. Typing 'kill name=<command>' to terminate process by the command name.")
         print("4. Typing 'sort <parameter>' for sorting, include: PID, USER, PR, RES, %CPU, %MEM, COMMAND.")
         print("5. Typing 'priority pid=<PID> value=<new_priority>' to change the priority of specific process.")
-        print("6. Typing'details pid=<PID>' to show detail of specific process.")
-        print("7. Typing'exit' to exit program.")
+        print("6. Typing 'details pid=<PID>' to show detail of specific process.")
+        print("7. Typing 'exit' to exit program.")
         command = input("Input Command: ").strip().lower()
 
         if command == "exit":
