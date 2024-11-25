@@ -26,7 +26,7 @@ def get_process_info():
         except (psutil.NoSuchProcess, psutil.ZombieProcess):
             pass
         except psutil.AccessDenied:
-            print(f"Lỗi: Không đủ quyền truy cập để lấy thông tin tiến trình PID {proc.pid}.")
+            print(f"Error: Access denied to get the infromation of the process with PID {proc.pid}.")
             pass
 
     # Sắp xếp danh sách process theo thuộc tính được chọn
@@ -42,12 +42,12 @@ def display_processes(processes):
     print(table)
 
 def kill_process(pid=None, name=None):
-    """Kết thúc một tiến trình dựa trên PID hoặc tên lệnh."""
+    """Kết thúc một the process dựa trên PID hoặc tên lệnh."""
     try:
         if pid:
             process = psutil.Process(pid)
             process.terminate()
-            print(f"Process với PID {pid} đã bị kết thúc.")
+            print(f"Process with PID {pid} has been terminated.")
         elif name:
             CountKill=0
             for proc in psutil.process_iter(['name']):
@@ -55,18 +55,18 @@ def kill_process(pid=None, name=None):
                     proc.terminate()
                     CountKill+=1
             if CountKill>0:
-                print(f"{CountKill} Process {name} đã bị kết thúc.")
+                print(f"{CountKill} Process {name} has been terminated.")
             else:
-                print(f"Không tìm thấy process có tên {name}.")
+                print(f"Can not find process with name {name}.")
     except psutil.AccessDenied:
-        print("Lỗi: Không đủ quyền truy cập để kết thúc tiến trình này.")
+        print("Error: Access denied to terminate the process.")
     except psutil.NoSuchProcess:
-        print("Lỗi: Không tìm thấy tiến trình.")
+        print("Error: Can not find the process.")
     except Exception as e:
-        print(f"Lỗi khác: {e}")
+        print(f"Other Error: {e}")
 
 def change_priority(command):
-    """Thay đổi độ ưu tiên của một tiến trình."""
+    """Thay đổi độ ưu tiên của một the process."""
     try:
         parts = command.split()
         pid_part = next(part for part in parts if part.startswith("pid="))
@@ -76,47 +76,47 @@ def change_priority(command):
 
         process = psutil.Process(pid)
         process.nice(new_priority)
-        print(f"Độ ưu tiên của PID {pid} đã được thay đổi thành {new_priority}.")
+        print(f"The value of priority of PID {pid} changed to {new_priority}.")
         input("Press Enter to observe the result")
 
     except psutil.AccessDenied:
-        print("Lỗi: Không đủ quyền truy cập để thay đổi độ ưu tiên của tiến trình này.")
+        print("Error: Access denied change priority of the process.")
         input("Press Enter to escape")
     except psutil.NoSuchProcess:
-        print("Lỗi: Không tìm thấy tiến trình.")
+        print("Error: Can not find the process.")
         input("Press Enter to escape")
     except StopIteration:
-        print("Lỗi: Vui lòng nhập đúng định dạng 'priority pid=<PID> value=<new_priority>'.")
+        print("Error: Please enter correct format 'priority pid=<PID> value=<new_priority>'.")
         input("Press Enter to escape")
     except ValueError:
-        print("Lỗi: PID và giá trị ưu tiên phải là số nguyên.")
+        print("Error: PID or value of priority must be an integer.")
         input("Press Enter to escape")
     except Exception as e:
-        print(f"Lỗi khác: {e}")
+        print(f"Other Error: {e}")
         input("Press Enter to escape")
 
 def view_process_details(pid):
-    """Hiển thị chi tiết của một tiến trình."""
+    """Hiển thị chi tiết của một the process."""
     try:
         process = psutil.Process(pid)
         details = process.as_dict(attrs=['pid', 'name', 'username', 'status', 'cpu_percent', 'memory_info', 'create_time', 'cmdline'])
         
-        detail_output = "\nChi tiết tiến trình:\n"
+        detail_output = "\nProcess details:\n"
         for key, value in details.items():
             detail_output += f"{key.capitalize()}: {value}\n"
         
         print(detail_output)
-        input("Nhấn Enter để quay lại.")
+        input("Press Enter to return.")
     
     except psutil.AccessDenied:
-        print("Lỗi: Không đủ quyền truy cập để xem chi tiết của tiến trình này.")
-        input("Nhấn Enter để quay lại.")
+        print("Error: Access deniedto view detail of this process.")
+        input("Press Enter to return.")
     except psutil.NoSuchProcess:
-        print("Lỗi: Không tìm thấy tiến trình.")
-        input("Nhấn Enter để quay lại.")
+        print("Error: Can not find the process.")
+        input("Press Enter to return.")
     except Exception as e:
-        print(f"Lỗi khác: {e}")
-        input("Nhấn Enter để quay lại.")
+        print(f"Other Error: {e}")
+        input("Press Enter to return.")
 
 
 def main():
@@ -126,18 +126,18 @@ def main():
         display_processes(processes)
 
         print("\n--- Process Manager CLI ---")
-        print("Các lệnh có sẵn:")
-        print("1. Nhấn Enter để làm mới danh sách.")
-        print("2. Nhập 'kill pid=<PID>' để kết thúc một process bằng PID.")
-        print("3. Nhập 'kill name=<command>' để kết thúc một process bằng tên lệnh.")
-        print("4. Nhập 'sort <thuộc tính>' để sắp xếp, bao gồm: PID, USER, PR, RES, %CPU, %MEM, COMMAND.")
-        print("5. Nhập 'priority pid=<PID> value=<new_priority>' để thay đổi độ ưu tiên.")
-        print("6. Nhập 'details pid=<PID>' để xem chi tiết của một process.")
-        print("7. Nhập 'exit' để thoát chương trình.")
-        command = input("Nhập lệnh: ").strip().lower()
+        print("Availiable Command:")
+        print("1. Press Enter to refresh.")
+        print("2. Typing 'kill pid=<PID>' to terminate process by PID.")
+        print("3. Typing 'kill name=<command>' to terminate process by the command name.")
+        print("4. Typing 'sort <parameter>' for sorting, include: PID, USER, PR, RES, %CPU, %MEM, COMMAND.")
+        print("5. Typing 'priority pid=<PID> value=<new_priority>' to change the priority of specific process.")
+        print("6. Typing'details pid=<PID>' to show detail of specific process.")
+        print("7. Typing'exit' to exit program.")
+        command = input("Input Command: ").strip().lower()
 
         if command == "exit":
-            print("Thoát chương trình.")
+            print("Exit program.")
             break
         elif command == "":
             continue
@@ -150,7 +150,7 @@ def main():
                     name = command.split("name=")[1]
                     kill_process(name=name)
             except ValueError:
-                print("Lỗi: PID phải là một số nguyên .")
+                print("Error: PID must be an integer .")
             time.sleep(3)
         elif command.startswith("sort"):
             sort_by = command.split(" ")[1]
@@ -161,9 +161,9 @@ def main():
                 pid = int(command.split("pid=")[1])
                 view_process_details(pid)
             except (ValueError, IndexError):
-                print("Lỗi: PID phải là một số nguyên.")
+                print("Error: PID must be an integer.")
         else:
-            print("Lệnh không hợp lệ. Vui lòng thử lại.")
+            print("Invalid Command. Please try again.")
 
 if __name__ == "__main__":
     main()
