@@ -47,7 +47,6 @@ def kill_process(pid=None, name=None):
         if pid:
             process = psutil.Process(pid)
             process.terminate()
-            log_action(f"Killed process with PID {pid}.")
             print(f"Process với PID {pid} đã bị kết thúc.")
         elif name:
             CountKill=0
@@ -77,7 +76,6 @@ def change_priority(command):
 
         process = psutil.Process(pid)
         process.nice(new_priority)
-        log_action(f"Changed priority of PID {pid} to {new_priority}.")
         print(f"Độ ưu tiên của PID {pid} đã được thay đổi thành {new_priority}.")
         input("Press Enter to observe the result")
 
@@ -120,9 +118,6 @@ def view_process_details(pid):
         print(f"Lỗi khác: {e}")
         input("Nhấn Enter để quay lại.")
 
-def log_action(action):
-    with open("process_manager_log.txt", "a") as f:
-        f.write(f"{datetime.datetime.now()}: {action}\n")
 
 def main():
     global sort_by
