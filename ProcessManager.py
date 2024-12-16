@@ -118,6 +118,14 @@ def view_process_details(pid):
         print(f"Other Error: {e}")
         input("Press Enter to return.")
 
+def filter_by_name(processes, name):
+    name = name.lower()
+    return [proc for proc in processes if name in proc[7].lower()]
+
+def filter_by_user(processes, username):
+    username = username.lower()
+    return [proc for proc in processes if proc[1] and username in proc[1].lower()]
+
 
 def main():
     global sort_by
@@ -133,7 +141,9 @@ def main():
         print("4. Typing 'sort <parameter>' for sorting, include: PID, USER, PR, RES, %CPU, %MEM, COMMAND.")
         print("5. Typing 'priority pid=<PID> value=<new_priority>' to change the priority of specific process.")
         print("6. Typing 'details pid=<PID>' to show detail of specific process.")
-        print("7. Typing 'exit' to exit program.")
+        print("7. Typing 'filter name=<name> to filter process which contains the  parameter name in the command.")
+        print("8. Typing 'filter user=<user> to filter process which belong to user.")
+        print("9. Typing 'exit' to exit program.")
         command = input("Input Command: ").strip().lower()
 
         if command == "exit":
@@ -162,6 +172,24 @@ def main():
                 view_process_details(pid)
             except (ValueError, IndexError):
                 print("Error: PID must be an integer.")
+        elif command.startswith("filter"):
+            if "name=" in command:
+                name = command.split("name=")[1]
+                filtered_processes = filter_by_name(processes, name)
+                if filtered_processes:
+                    display_processes(filtered_processes)
+                else:
+                    print(f"No process found with name '{name}'.")
+            elif "user=" in command:
+                user = command.split("user=")[1]
+                filtered_processes = filter_by_user(processes, user)
+                if filtered_processes:
+                    display_processes(filtered_processes)
+                else:
+                    print(f"No process found for user '{user}'.")
+            else:
+                print("Error: Invalid filter format. Use 'filter name=<name>' or 'filter user=<user>'.")
+            input("Press Enter to return.")
         else:
             print("Invalid Command. Please try again.")
 
