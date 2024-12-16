@@ -96,27 +96,29 @@ def change_priority(command):
         input("Press Enter to escape")
 
 def view_process_details(pid):
-    """Hiển thị chi tiết của một the process."""
+    os.system('clear')
     try:
         process = psutil.Process(pid)
         details = process.as_dict(attrs=['pid', 'name', 'username', 'status', 'cpu_percent', 'memory_info', 'create_time', 'cmdline'])
-        
+
         detail_output = "\nProcess details:\n"
         for key, value in details.items():
             detail_output += f"{key.capitalize()}: {value}\n"
-        
+
+        threads = process.threads()
+        if threads:
+            detail_output += "\nThreads:\n"
+            detail_output += tabulate(threads, headers=["TID", "User Time", "System Time"], tablefmt="pretty")
+
         print(detail_output)
-        input("Press Enter to return.")
-    
+
     except psutil.AccessDenied:
-        print("Error: Access deniedto view detail of this process.")
-        input("Press Enter to return.")
+        print("Error: Access denied to view details of this process.")
     except psutil.NoSuchProcess:
-        print("Error: Can not find the process.")
-        input("Press Enter to return.")
+        print("Error: Cannot find the process.")
     except Exception as e:
         print(f"Other Error: {e}")
-        input("Press Enter to return.")
+    input("Press Enter to return.")
 
 def filter_by_name(processes, name):
     name = name.lower()
